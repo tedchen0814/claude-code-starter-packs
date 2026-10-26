@@ -5,7 +5,7 @@ description: Claude Code 懶人包全集 — 環境建置、MCP 串接、技能�
 
 # Claude Code 懶人包 — AI Agent 自動安裝入口
 
-當使用者把這個資料夾交給你並說要安裝時：
+當使用者給你這個 repo 網址（https://github.com/tedchen0814/claude-code-starter-packs）或本機資料夾，並說要安裝時：
 
 ## 步驟一：列出可用懶人包
 
@@ -30,7 +30,8 @@ description: Claude Code 懶人包全集 — 環境建置、MCP 串接、技能�
 
 ## 步驟三：依序安裝
 
-所有內容都在本資料夾，不需要連到外部 repo。依使用者選的編號，依序讀取 `skills/<名稱>/SKILL.md` 並照步驟執行；需要完整說明時，再讀資料夾根目錄對應編號的懶人包 MD 檔。
+所有內容都在本 repo。依使用者選的編號，依序讀取 `skills/<名稱>/SKILL.md` 並照步驟執行；需要完整說明時，再讀根目錄對應編號的懶人包 MD 檔。
+使用者只給網址時，從 `https://raw.githubusercontent.com/tedchen0814/claude-code-starter-packs/main/<路徑>` 讀取檔案。
 
 ## 步驟四：回報
 
