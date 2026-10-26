@@ -333,7 +333,7 @@ python <SKILL路徑>/draw.py "一隻可愛的黑貓，扁平插畫風格" --name
 | 方式 | 優點 | 缺點 |
 |------|------|------|
 | **Skill（本篇）** | 零安裝門檻、按需呼叫、不佔資源、整合費用保護邏輯 | 不支援圖片局部修改（需另寫） |
-| MCP Server | 支援 inpainting、多輪對話 | 要裝 Node.js、改 settings.json、常駐 |
+| MCP Server | 支援 inpainting、多輪對話 | 要裝 Node.js、改 MCP 設定、常駐 |
 
 對一般使用者來說，**Skill 方式門檻最低**，而且你的 `draw.py` 已經內建 `--edit` 能做全圖改圖。
 

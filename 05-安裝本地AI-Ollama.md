@@ -205,5 +205,5 @@ ollama rm [模型名稱]
 
 - [Ollama 官網](https://ollama.com)
 - [Gemma 4 官方發布](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
-- [[06-設定Gemini免費API|懶人包 #06：設定 Gemini 免費 API]]
-- [[README|Claude Code 懶人包索引]]
+- [懶人包 #06：設定 Gemini 免費 API](06-設定Gemini免費API.md)
+- [Claude Code 懶人包索引](README.md)

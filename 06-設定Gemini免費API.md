@@ -204,5 +204,5 @@ Claude 會自動：
 
 - [Google AI Studio](https://aistudio.google.com)
 - [Gemini API 文件](https://ai.google.dev/docs)
-- [[05-安裝本地AI Ollama|懶人包 #05：安裝本地 AI（Ollama）]]
-- [[README|Claude Code 懶人包索引]]
+- [](05-安裝本地AI-Ollama.md)
+- [Claude Code 懶人包索引](README.md)

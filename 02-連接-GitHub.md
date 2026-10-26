@@ -276,6 +276,6 @@ gh auth login --web --git-protocol https
 
 ## 相關連結
 
-- [[00-環境建置|懶人包 #00：環境建置]]
-- [[01-連接 NotebookLM|懶人包 #01：連接 NotebookLM]]
-- [[README|Claude Code 懶人包索引]]
+- [懶人包 #00：環境建置](00-環境建置.md)
+- [](01-連接-NotebookLM.md)
+- [Claude Code 懶人包索引](README.md)

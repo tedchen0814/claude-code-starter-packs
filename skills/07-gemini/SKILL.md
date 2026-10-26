@@ -11,7 +11,7 @@ description: Claude Code 設定 Gemini 免費 API。說「設定 Gemini」「Gem
 
 ## 測試
 ```bash
-curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_API_KEY" -H "Content-Type: application/json" -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$GEMINI_API_KEY" -H "Content-Type: application/json" -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
 ```
 
 ⚠️ Gemini API key 在 AI Studio 建立，不需信用卡。

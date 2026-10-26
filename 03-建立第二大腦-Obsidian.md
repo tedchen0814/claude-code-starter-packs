@@ -189,10 +189,23 @@ npm install -g @bitbonsai/mcpvault
 
 #### 5-2：寫入 MCP 設定檔
 
-> ⚠️ **重要**：為了確保 Claude Code 能正確載入 MCP，請在**三個位置**都寫入設定。
-> 這是因為不同版本的 Claude Code（桌面版、CLI、Web）讀取設定的位置不同。
+> ⚠️ **重要**：Claude Code 的 MCP 設定**不在** `~/.claude/settings.json`，而是在以下兩個位置。
+> 優先用 `claude mcp add` 指令自動寫入，沒有 CLI 時再手動編輯。
 
-**位置 1：使用者全域設定** `~/.claude/settings.json`
+**方法 A（建議）：用指令寫入使用者層級設定**（所有專案都能用，會寫進 `~/.claude.json`）
+
+```bash
+# Windows
+claude mcp add --scope user obsidian -- "C:\Users\[使用者]\AppData\Roaming\npm\mcpvault.cmd" "G:\我的雲端硬碟\[vault名稱]"
+
+# macOS / Linux
+claude mcp add --scope user obsidian -- mcpvault "/Users/[使用者]/Library/CloudStorage/GoogleDrive-xxx/My Drive/[vault名稱]"
+```
+
+**方法 B：手動寫入**
+
+- 使用者層級：`~/.claude.json` 最上層的 `mcpServers` 區塊（此檔案還有其他設定，只新增 `obsidian` 這一項，不要覆蓋整個檔案）
+- 專案層級：`[工作目錄]/.mcp.json`
 
 ```json
 {
@@ -206,14 +219,6 @@ npm install -g @bitbonsai/mcpvault
   }
 }
 ```
-
-**位置 2：專案設定** `[工作目錄]/.claude/settings.local.json`
-
-（內容同上）
-
-**位置 3：專案根目錄** `[工作目錄]/.mcp.json`
-
-（內容同上）
 
 > 📝 **macOS / Linux 的設定範例**：
 > ```json
@@ -239,7 +244,7 @@ npm install -g @bitbonsai/mcpvault
 
 > 🖐️ **需要手動操作**：請使用者完全關閉 Claude Code 桌面版，然後重新開啟。
 >
-> ⚠️ **只需要重啟一次**：如果步驟五的三個設定檔都正確寫入，重啟一次就夠了。
+> ⚠️ **只需要重啟一次**：步驟五的設定正確寫入後，重啟一次就夠了。可先用 `claude mcp list` 確認 obsidian 已列出。
 
 重新開啟後，驗證 MCP 是否成功載入：
 
@@ -249,7 +254,7 @@ npm install -g @bitbonsai/mcpvault
 
 #### 驗證方式 2：如果工具不存在
 如果找不到 `mcp__obsidian__` 開頭的工具，代表 MCP 未成功載入，請依序排查：
-1. 確認 `~/.claude/settings.json` 中的 `command` 路徑是否正確（路徑中的檔案確實存在）
+1. 執行 `claude mcp get obsidian`，確認 `command` 路徑是否正確（路徑中的檔案確實存在）
 2. 確認 vault 路徑確實存在且可存取
 3. 在終端機手動測試 MCP server 是否能啟動：
    ```bash
@@ -336,11 +341,10 @@ Claude 會自動：
 如果需要完全重置 MCP 連接：
 ```bash
 # 如果有 claude CLI
-claude mcp remove obsidian
+claude mcp remove obsidian --scope user
 
 # 如果沒有 claude CLI（桌面版），手動刪除以下檔案中的 obsidian 設定：
-# - ~/.claude/settings.json
-# - [工作目錄]/.claude/settings.local.json
+# - ~/.claude.json（mcpServers 區塊裡的 obsidian）
 # - [工作目錄]/.mcp.json
 ```
 然後從步驟五重新開始。
@@ -357,7 +361,7 @@ claude mcp remove obsidian
 | `claude: command not found` | Claude Code 桌面版不一定有 CLI。改用手動寫入設定檔的方式（見步驟五） |
 | 重啟後 MCP 工具仍不存在 | 確認設定檔中 `command` 使用**完整路徑**（如 `C:\\Users\\...\\mcpvault.cmd`），不要只寫 `npx` |
 | Windows bash 找不到 node | 新裝的 Node.js 可能不在 bash PATH 中，需要 `export PATH="/c/Program Files/nodejs:$PATH"` |
-| 設定檔寫了但沒生效 | 確認在三個位置都寫入（`~/.claude/settings.json`、`.claude/settings.local.json`、`.mcp.json`） |
+| 設定檔寫了但沒生效 | MCP 設定要寫在 `~/.claude.json` 或 `.mcp.json`，寫在 `~/.claude/settings.json` 不會生效；用 `claude mcp list` 確認 |
 | Obsidian 需要裝外掛嗎？ | **不需要**。mcpvault 直接讀寫 vault 資料夾的檔案，不經過 Obsidian app |
 
 ---
@@ -385,6 +389,7 @@ claude mcp remove obsidian
 | 2026-04-06 | v0.3 | 移除 obsidian-ide（obsidian-claude-code-mcp），mcpvault 已涵蓋所需功能 |
 | 2026-04-06 | v0.4 | 補充 Google Drive 桌面版完整安裝說明、修正步驟編號 |
 | 2026-04-06 | v0.5 | 實測修正：步驟五改為全域安裝 + 手動寫設定檔（解決桌面版無 CLI、npx PATH 問題），三處設定確保一次重啟就成功，補充 Windows 踩坑常見問題 |
+| 2026-10-26 | v0.6 | 修正 MCP 設定位置：改為 `claude mcp add --scope user`（寫入 `~/.claude.json`）或 `.mcp.json`，移除無效的 `settings.json` 寫法 |
 
 ---
 
@@ -392,5 +397,5 @@ claude mcp remove obsidian
 
 - [mcpvault GitHub](https://github.com/bitbonsai/mcpvault)
 - [Obsidian 官網](https://obsidian.md)
-- [[00-環境建置|懶人包 #00：環境建置]]
-- [[README|Claude Code 懶人包索引]]
+- [懶人包 #00：環境建置](00-環境建置.md)
+- [Claude Code 懶人包索引](README.md)

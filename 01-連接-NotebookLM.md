@@ -327,4 +327,4 @@ Documents/
 
 - [notebooklm-mcp-cli GitHub](https://github.com/jacob-bd/notebooklm-mcp-cli)
 - [NotebookLM Downloader MCP](https://lobehub.com/mcp/pmane-notebooklm-downloader)
-- [[README|Claude Code 懶人包索引]]
+- [Claude Code 懶人包索引](README.md)
