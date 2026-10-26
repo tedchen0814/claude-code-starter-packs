@@ -22,7 +22,8 @@ description: Claude Code 懶人包全集 — 環境建置、MCP 串接、技能�
 | 08 | `07-gemini` | 設定 Gemini 免費 API |
 | 09 | `08-workspace` | 研發建專案工作模式 |
 | 10 | `09-draw` | 安裝 gpt-image-2 生圖 skill |
-| 11 | `00-install-all` | 一次安裝全部 |
+| 11 | `10-vercel` | 串接 Vercel（CLI + MCP + 部署） |
+| 12 | `00-install-all` | 一次安裝全部 |
 
 ## 步驟二：讓使用者選擇
 
