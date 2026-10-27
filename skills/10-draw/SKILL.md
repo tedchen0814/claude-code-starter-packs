@@ -24,12 +24,12 @@ echo "OPENAI_API_KEY=sk-proj-你的key" > ~/.openai.env
 ```
 
 ### 3. 安裝 draw skill
-把本懶人包資料夾裡的 `skills/09-draw/` 整個複製成 `~/.claude/skills/draw/`：
+把本懶人包資料夾裡的 `skills/10-draw/` 整個複製成 `~/.claude/skills/draw/`：
 ```bash
 mkdir -p ~/.claude/skills/draw
-cp "<懶人包資料夾>/skills/09-draw/draw.py" ~/.claude/skills/draw/
+cp "<懶人包資料夾>/skills/10-draw/draw.py" ~/.claude/skills/draw/
 ```
-再依 `08-安裝gpt-image-2生圖.md` 的內容建立 `~/.claude/skills/draw/SKILL.md`（生圖用的 skill 說明）。
+再依 `10-安裝gpt-image-2生圖.md` 的內容建立 `~/.claude/skills/draw/SKILL.md`（生圖用的 skill 說明）。
 確認 `~/.claude/skills/draw/draw.py` 存在；不要從 OpenCode 的 `~/.config/opencode/skills/` 混用。
 
 ### 4. 測試

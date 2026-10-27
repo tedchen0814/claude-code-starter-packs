@@ -1,5 +1,5 @@
 ---
-title: 'Claude Code 懶人包 #04：連接 Supabase 資料庫'
+title: 'Claude Code 懶人包 #05：連接 Supabase 資料庫'
 date: '2026-04-04'
 type: 懶人包
 version: v0.2
@@ -11,7 +11,7 @@ tags:
   - 資料庫
   - MCP
 ---
-# Claude Code 懶人包 #04：連接 Supabase 資料庫
+# Claude Code 懶人包 #05：連接 Supabase 資料庫
 
 > 版本：v0.2
 > 更新日期：2026-04-04
@@ -109,7 +109,7 @@ tags:
 >
 > ⚠️ **安全提醒**：service_role key 有完整的資料庫權限，不要分享給他人或放在公開的程式碼中。
 
-請使用者將這兩個值提供給 Claude（貼在對話中即可）。
+⚠️ **service_role key 等同資料庫的最高權限，不要貼進對話。** 請使用者自己保管這兩個值，並由使用者在自己的終端機執行下面的指令（Claude 只負責說明要填哪些欄位）。
 
 ---
 
@@ -120,11 +120,12 @@ tags:
 使用使用者提供的 Project URL 和 service_role key，執行以下指令：
 
 ```bash
-claude mcp add supabase --scope user -- npx -y @supabase/mcp-server-supabase@latest --supabase-url [使用者的Project URL] --supabase-service-role-key [使用者的service_role_key]
+claude mcp add supabase -- npx -y @supabase/mcp-server-supabase@latest --supabase-url [使用者的Project URL] --supabase-service-role-key [使用者的service_role_key]
 ```
 
 > 將 `[使用者的Project URL]` 和 `[使用者的service_role_key]` 替換為使用者提供的實際值。
 > 注意：URL 和 key 都不需要加引號。
+> 這個指令預設只裝在**目前專案**；要所有專案共用才加 `--scope user`，先說明「每個對話都會多載入這批工具」並取得同意。改 `~/.claude.json` 前先備份。key 會被寫進設定檔，這個檔案不要上傳或分享。
 
 ---
 

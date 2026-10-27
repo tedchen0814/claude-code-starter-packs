@@ -1,4 +1,4 @@
-# Claude Code 懶人包 #04.5：連接 Firebase 資料庫
+# Claude Code 懶人包 #06：連接 Firebase 資料庫
 
 > 版本：v0.7
 > 更新日期：2026-04-14
@@ -17,11 +17,11 @@
 - **千人活動也撐得住**（免費並發連線 100 萬）
 - **永遠不會閒置暫停**
 
-> 💡 **對新手而言，這是比 Supabase 更友善的預設選擇**。Supabase（懶人包 #04）適合需要重度 SQL 統計分析的場景，但對絕大多數個人小工具，Firebase 的限制更少、更省心。
+> 💡 **對新手而言，這是比 Supabase 更友善的預設選擇**。Supabase（懶人包 #05）適合需要重度 SQL 統計分析的場景，但對絕大多數個人小工具，Firebase 的限制更少、更省心。
 
 ### Firebase vs Supabase，該選哪個？
 
-| 比較項目 | Supabase（懶人包 #04） | Firebase（本懶人包） |
+| 比較項目 | Supabase（懶人包 #05） | Firebase（本懶人包） |
 |---------|----------------------|---------------------|
 | 資料庫類型 | SQL（像 Excel 表格） | NoSQL（像 JSON 文件） |
 | 免費專案數 | 2 個 | 無限 |
@@ -214,8 +214,10 @@ npx -y firebase-tools@latest deploy --only firestore:rules
 執行以下指令安裝 Firebase MCP Server：
 
 ```bash
-claude mcp add firebase --scope user -- npx -y firebase-tools@latest mcp
+claude mcp add firebase -- npx -y firebase-tools@latest mcp
 ```
+
+> 預設只裝在**目前專案**；要所有專案共用才加 `--scope user`，先說明「每個對話都會多載入這批工具」並取得同意。改 `~/.claude.json` 前先備份。
 
 ---
 
@@ -390,5 +392,5 @@ npx -y firebase-tools@latest login
 - [Firebase 官網](https://firebase.google.com)
 - [Firebase MCP Server 官方文件](https://firebase.google.com/docs/ai-assistance/mcp-server)
 - [Cloud Firestore 文件](https://firebase.google.com/docs/firestore)
-- [懶人包 #04：連接 Supabase 資料庫](04-連接-Supabase-資料庫.md)
+- [懶人包 #05：連接 Supabase 資料庫](05-連接-Supabase-資料庫.md)
 - [懶人包 #02：連接 GitHub](02-連接-GitHub.md)（網頁上線用）

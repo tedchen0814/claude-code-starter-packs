@@ -1,23 +1,38 @@
 ---
 name: cc-install-all
-description: 一次安裝所有 Claude Code 懶人包技能。說「全部安裝」「裝完所有 Claude Code 懶人包」時載入。
+description: Claude Code 懶人包狀態盤點（編號 00A）。只檢查、不安裝。說「盤點懶人包」「看看裝了哪些」或使用者要求「全部安裝」時載入。
 ---
 
-# 一次安裝全部技能（Claude Code 版）
+# 狀態盤點（00A，Claude Code 版）
 
-依序載入並執行：
+這個技能**只檢查、不安裝、不登入、不修改任何東西**。使用者要求「全部安裝」時，不要一次裝完；改做這份盤點，再依結果建議只裝需要的項目。
 
-1. 00-env-setup — 環境建置
-2. 01-notebooklm — NotebookLM
-3. 02-github — GitHub
-4. 03-obsidian — Obsidian
-5. 04-second-brain — 第二大腦
-6. 04-supabase — Supabase
-7. 05-firebase — Firebase
-8. 06-ollama — 本地 AI
-9. 07-gemini — Gemini API
-10. 08-workspace — 研發建專案
-11. 09-draw — 生圖技能
-12. 10-vercel — Vercel
+## 步驟
 
-每完成一個報告進度，最終回報總表：12 項各別的成功/失敗/已跳過狀態。
+1. 唯讀檢查環境，逐項回報版本或「未安裝」：
+   - `node --version`、`npm --version`、`uv --version`、`git --version`、`gh --version`、`python --version`
+   - `gh auth status`（只看是否登入，不要登入）。**這個結果可能是誤判**：執行環境有時讀不到系統憑證庫。失敗時只能寫「無法確認 GitHub 登入狀態」，請使用者在自己的終端機執行 `gh auth status` 確認；**不要直接說 token 無效，也不要建議重新登入**。
+   - `vercel.cmd --version`、`firebase.cmd --version`、`nlm --version`（Windows 上 npm 全域工具要用 `.cmd` 檢查：公司或群組原則常擋未簽章的 `.ps1`，直接打 `vercel` 會失敗，看起來像「沒裝」，其實有裝）
+   - 找不到時，不要直接寫「未安裝」；先用 `Get-Command <名稱>` 與 `.cmd` 版各查一次。仍找不到，才寫「在這個執行環境找不到（可能是 PATH 不同）」，並請使用者在自己的終端機確認。
+2. 列出 Claude Code 已設定的 MCP **名稱**（用 `claude mcp list`，或讀 `~/.claude.json` 與專案 `.mcp.json` 的 `mcpServers` 名稱）。只列名稱，不顯示任何 key、token 或網址參數。
+3. 檢查 `~/.claude/skills/` 底下已有哪些技能（只列資料夾名稱）。
+4. 不要讀取 `~/.claude/.credentials.json` 或任何憑證檔。
+
+## 回報格式
+
+用白話整理成一張表，每一項標示（編號 00～11）：
+
+| 編號 | 項目 | 狀態 |
+|---|---|---|
+| 00 | 環境準備 | ✅ 已完成／⚠️ 缺 xxx／⬜ 尚未開始 |
+| …（其餘依序列出 01～11）| | |
+
+狀態只用：✅ 已完成、⚠️ 部分完成（說明缺什麼）、⬜ 尚未開始、➖ 不適用。
+
+## 建議
+
+依盤點結果，**最多推薦兩項**下一步，並說明理由。其餘項目一律說「有需要再裝」。最後問：「要先裝哪一項？」得到回答前，不安裝任何東西。
+
+## 項目對照（00～11）
+
+00 環境準備、01 NotebookLM、02 GitHub、03 Obsidian、04 第二大腦、05 Supabase、06 Firebase、07 Ollama、08 Gemini API、09 專案工作模式、10 AI 生圖、11 Vercel

@@ -1,5 +1,5 @@
 ---
-title: 'Claude Code 懶人包 #09：串接 Vercel'
+title: 'Claude Code 懶人包 #11：串接 Vercel'
 date: '2026-10-26'
 type: 懶人包
 version: v0.1
@@ -11,7 +11,7 @@ tags:
   - MCP
   - 部署
 ---
-# Claude Code 懶人包 #09：串接 Vercel
+# Claude Code 懶人包 #11：串接 Vercel
 
 > 版本：v0.1
 > 更新日期：2026-10-26
@@ -134,10 +134,14 @@ vercel login
 
 Vercel 官方提供遠端 MCP 伺服器 `https://mcp.vercel.com`，讓 Claude 可以直接查專案、部署與 log。
 
-註冊到使用者層級（所有專案都能用）：
+> ⚠️ **這一步是選用，預設不要做。** 只要 CLI 已登入（步驟二），就能列專案、部署、看紀錄，大多數人不需要 MCP。MCP 會讓每個對話多載入一批工具、增加固定開銷，授權範圍也涵蓋帳號下所有專案。使用者明確要求時，先說明這些影響並取得同意再加。
+
+註冊到**目前專案**（預設；不加 `--scope`）：
 ```bash
-claude mcp add --transport http --scope user vercel https://mcp.vercel.com
+claude mcp add --transport http vercel https://mcp.vercel.com
 ```
+
+要所有專案共用才加 `--scope user`（再次先取得同意）。
 
 確認已加入：
 ```bash
@@ -248,7 +252,7 @@ Claude 會自動：
 完全重置：
 ```bash
 vercel logout
-claude mcp remove vercel --scope user
+claude mcp remove vercel          # 若當初用 --scope user 加入，這裡也要加上 --scope user
 ```
 然後從步驟一重來。
 

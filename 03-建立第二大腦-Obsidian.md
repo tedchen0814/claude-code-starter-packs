@@ -171,14 +171,16 @@ mcpvault 是主力 MCP，讓 Claude Code 能搜尋、讀取、編輯你的筆記
 > - 用 `npx` 當 MCP command 啟動時，Windows 環境可能因為 PATH 問題導致 Claude Code 找不到 npx
 > - 解法：**先全域安裝 mcpvault，再手動寫入設定檔，使用完整路徑**
 
-#### 5-1：全域安裝 mcpvault
+#### 5-1：全域安裝 mcpvault（鎖定版本）
+
+> 先向使用者說明：這會在電腦上安裝一個全域工具。版本鎖定在 `0.15.0`（撰寫時驗證過的版本），避免新版本悄悄改變行為；要升級時先告知使用者，不要自動用 `@latest`。
 
 ```bash
 # Windows（記得加 PATH）
-export PATH="/c/Program Files/nodejs:$PATH" && npm install -g @bitbonsai/mcpvault
+export PATH="/c/Program Files/nodejs:$PATH" && npm install -g @bitbonsai/mcpvault@0.15.0
 
 # macOS / Linux
-npm install -g @bitbonsai/mcpvault
+npm install -g @bitbonsai/mcpvault@0.15.0
 ```
 
 安裝完成後，確認全域安裝的路徑：
@@ -192,20 +194,24 @@ npm install -g @bitbonsai/mcpvault
 > ⚠️ **重要**：Claude Code 的 MCP 設定**不在** `~/.claude/settings.json`，而是在以下兩個位置。
 > 優先用 `claude mcp add` 指令自動寫入，沒有 CLI 時再手動編輯。
 
-**方法 A（建議）：用指令寫入使用者層級設定**（所有專案都能用，會寫進 `~/.claude.json`）
+> 🛡️ **改設定檔之前先備份**：`~/.claude.json` → `~/.claude.json.bak-<日期時間>`。
+
+> 📌 **設定範圍**：預設只裝在**目前專案**（不加 `--scope`）。每個 MCP 都會讓每個對話多載入一批工具、增加固定開銷；使用者確實要在所有專案都用 Obsidian，才加 `--scope user`，並先說明這個影響、取得同意。
+
+**方法 A（建議）：用指令寫入**（預設只在目前專案生效）
 
 ```bash
 # Windows
-claude mcp add --scope user obsidian -- "C:\Users\[使用者]\AppData\Roaming\npm\mcpvault.cmd" "G:\我的雲端硬碟\[vault名稱]"
+claude mcp add obsidian -- "C:\Users\[使用者]\AppData\Roaming\npm\mcpvault.cmd" "G:\我的雲端硬碟\[vault名稱]"
 
 # macOS / Linux
-claude mcp add --scope user obsidian -- mcpvault "/Users/[使用者]/Library/CloudStorage/GoogleDrive-xxx/My Drive/[vault名稱]"
+claude mcp add obsidian -- mcpvault "/Users/[使用者]/Library/CloudStorage/GoogleDrive-xxx/My Drive/[vault名稱]"
 ```
 
 **方法 B：手動寫入**
 
-- 使用者層級：`~/.claude.json` 最上層的 `mcpServers` 區塊（此檔案還有其他設定，只新增 `obsidian` 這一項，不要覆蓋整個檔案）
-- 專案層級：`[工作目錄]/.mcp.json`
+- 專案層級（建議）：`[工作目錄]/.mcp.json`
+- 使用者層級（所有專案、每個對話都會載入；需使用者同意）：`~/.claude.json` 最上層的 `mcpServers` 區塊（此檔案還有其他設定，只新增 `obsidian` 這一項，不要覆蓋整個檔案）
 
 ```json
 {
@@ -341,7 +347,7 @@ Claude 會自動：
 如果需要完全重置 MCP 連接：
 ```bash
 # 如果有 claude CLI
-claude mcp remove obsidian --scope user
+claude mcp remove obsidian          # 若當初用 --scope user 加入，這裡也要加上 --scope user
 
 # 如果沒有 claude CLI（桌面版），手動刪除以下檔案中的 obsidian 設定：
 # - ~/.claude.json（mcpServers 區塊裡的 obsidian）
@@ -390,6 +396,7 @@ claude mcp remove obsidian --scope user
 | 2026-04-06 | v0.4 | 補充 Google Drive 桌面版完整安裝說明、修正步驟編號 |
 | 2026-04-06 | v0.5 | 實測修正：步驟五改為全域安裝 + 手動寫設定檔（解決桌面版無 CLI、npx PATH 問題），三處設定確保一次重啟就成功，補充 Windows 踩坑常見問題 |
 | 2026-10-26 | v0.6 | 修正 MCP 設定位置：改為 `claude mcp add --scope user`（寫入 `~/.claude.json`）或 `.mcp.json`，移除無效的 `settings.json` 寫法 |
+| 2026-10-27 | v0.7 | mcpvault 鎖定 0.15.0；MCP 預設只裝目前專案（--scope user 改為需使用者同意）；改設定檔前先備份 |
 
 ---
 

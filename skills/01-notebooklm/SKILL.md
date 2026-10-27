@@ -29,7 +29,7 @@ nlm doctor
 ```bash
 nlm setup add claude-code
 ```
-（自動寫入 `~/.claude.json`；專案層級則是 `.mcp.json`）
+（這個指令會自動寫入 `~/.claude.json`，等於**所有專案、每個對話**都會載入 NotebookLM 的工具，增加固定開銷。執行前先備份 `~/.claude.json`，並告訴使用者這個影響；若只想在某個專案用，改把設定放進該專案的 `.mcp.json`，經同意再選。）
 
 ### 4. 驗證
 重啟 Claude Code 後，問：「請列出我所有的 NotebookLM 筆記本。」
