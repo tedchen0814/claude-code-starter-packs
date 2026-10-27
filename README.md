@@ -59,7 +59,7 @@ Claude 會先問你想做什麼（例如「連接 Obsidian」「把網頁放上�
 
 | 編號 | 懶人包 | 做什麼 | 安裝時會用到 |
 |------|--------|--------|-------------|
-| 00 | [環境建置](00-環境建置.md) | 確認並補裝 Node.js、uv 等基礎工具（缺的才補，經你同意） | — |
+| 00 | [環境建置](00-環境建置.md) | 確認並補裝 **Git**、Node.js、uv 等基礎工具（缺的才補，經你同意；Git 是後續所有項目的前置） | — |
 | 01 | [連接 NotebookLM](01-連接-NotebookLM.md) | 讓 Claude 讀寫 NotebookLM 筆記本，產生簡報、圖表 | Google 帳號 |
 | 02 | [連接 GitHub](02-連接-GitHub.md) | 連接 GitHub，用 GitHub Pages 把網頁上線 | GitHub 帳號 |
 | 03 | [建立第二大腦 Obsidian](03-建立第二大腦-Obsidian.md) | 安裝 Obsidian、MCP 連接、Google Drive 同步 | — |
@@ -106,6 +106,10 @@ claude-code-starter-packs/
 | 裝完 MCP，Claude 卻說找不到工具 | 完全關閉 Claude Code 再重新開啟 |
 | 某一步一直失敗 | 把錯誤訊息貼給 Claude，請它對照該懶人包的 FAQ 排除 |
 | 換了一台電腦 | 在新電腦重跑需要的懶人包 |
+| 想還原設定 | 改 `~/.claude.json` 之前都會先備份成 `.claude.json.bak-<日期時間>`（同一個資料夾），把備份檔複製回原檔名即可 |
+| 想移除某個 MCP | `claude mcp remove <名稱>`（若當初用 `--scope user` 加入，要加 `--scope user`）；沒有 `claude` 指令時，手動刪掉專案 `.mcp.json` 或 `~/.claude.json` 裡的對應項目 |
+| 想移除某個技能 | 刪掉 `~/.claude/skills/` 底下對應的資料夾，再完全關閉 Claude Code 重開 |
+| 讀 raw 檔案中文變亂碼（Windows PowerShell 5.1） | 改用 UTF-8 解碼重抓；不要根據亂碼的內容行動 |
 | 直接打 `vercel`、`firebase` 指令失敗（Windows） | 改打 `vercel.cmd`、`firebase.cmd`；公司或群組原則常擋未簽章的 `.ps1` |
 
 ---
