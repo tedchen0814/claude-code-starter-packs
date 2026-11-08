@@ -176,15 +176,16 @@ mcpvault 是主力 MCP，讓 Claude Code 能搜尋、讀取、編輯你的筆記
 > 先向使用者說明：這會在電腦上安裝一個全域工具。版本鎖定在 `0.15.0`（撰寫時驗證過的版本），避免新版本悄悄改變行為；要升級時先告知使用者，不要自動用 `@latest`。
 
 ```bash
-# Windows（記得加 PATH）
-export PATH="/c/Program Files/nodejs:$PATH" && npm install -g @bitbonsai/mcpvault@0.15.0
+# Windows（記得加 PATH；NPM_CONFIG_PREFIX 讓套件裝到非 AppData 的位置，
+# 避開 Claude 桌面版 MSIX 的路徑導向，詳見 00 環境建置）
+export PATH="/c/Program Files/nodejs:$PATH" && NPM_CONFIG_PREFIX="$USERPROFILE/.npm-global" npm install -g @bitbonsai/mcpvault@0.15.0
 
 # macOS / Linux
 npm install -g @bitbonsai/mcpvault@0.15.0
 ```
 
 安裝完成後，確認全域安裝的路徑：
-- Windows：通常在 `C:\Users\[使用者]\AppData\Roaming\npm\mcpvault.cmd`
+- Windows：通常在 `C:\Users\[使用者]\.npm-global\mcpvault.cmd`
 - macOS / Linux：通常在 `/usr/local/bin/mcpvault` 或 `~/.npm-global/bin/mcpvault`
 
 用 `which mcpvault` 或 `where.exe mcpvault` 確認實際路徑。
@@ -202,7 +203,7 @@ npm install -g @bitbonsai/mcpvault@0.15.0
 
 ```bash
 # Windows
-claude mcp add obsidian -- "C:\Users\[使用者]\AppData\Roaming\npm\mcpvault.cmd" "G:\我的雲端硬碟\[vault名稱]"
+claude mcp add obsidian -- "C:\Users\[使用者]\.npm-global\mcpvault.cmd" "G:\我的雲端硬碟\[vault名稱]"
 
 # macOS / Linux
 claude mcp add obsidian -- mcpvault "/Users/[使用者]/Library/CloudStorage/GoogleDrive-xxx/My Drive/[vault名稱]"
@@ -217,7 +218,7 @@ claude mcp add obsidian -- mcpvault "/Users/[使用者]/Library/CloudStorage/Goo
 {
   "mcpServers": {
     "obsidian": {
-      "command": "C:\\Users\\[使用者]\\AppData\\Roaming\\npm\\mcpvault.cmd",
+      "command": "C:\\Users\\[使用者]\\.npm-global\\mcpvault.cmd",
       "args": [
         "G:\\我的雲端硬碟\\[vault名稱]"
       ]

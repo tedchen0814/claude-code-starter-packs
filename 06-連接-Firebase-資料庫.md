@@ -219,6 +219,14 @@ claude mcp add firebase -- npx -y firebase-tools@latest mcp
 
 > 預設只裝在**目前專案**；要所有專案共用才加 `--scope user`，先說明「每個對話都會多載入這批工具」並取得同意。改 `~/.claude.json` 前先備份。
 
+> 🪟 **Windows + Claude 桌面版**：全域安裝要避開 `%APPDATA%`（MSIX 路徑導向，見 [#00](00-環境建置.md)）。若不想每次用 `npx`，可裝成固定位置的 CLI：
+> ```powershell
+> $env:NPM_CONFIG_PREFIX="$env:USERPROFILE\.npm-global"; npm install -g firebase-tools
+> ```
+> 執行檔為 `%USERPROFILE%\.npm-global\firebase.cmd`，註冊 MCP 時 command 寫完整路徑、args 為 `["mcp"]`。
+> npm 若警告 protobufjs、re2 的安裝腳本未被允許，CLI 通常仍可正常執行。
+> 只想用 CLI（`login`、`projects:list`）而不註冊 MCP 也可以，MCP 日後再加。沒有 `claude` CLI 時，手動編輯 `~/.claude.json` 的方式見 #00。
+
 ---
 
 ### 步驟四：登入 Firebase CLI
@@ -352,6 +360,8 @@ npx -y firebase-tools@latest login
 | 閒置暫停 | 不會暫停 | ✅✅ 不用設防暫停排程 |
 
 > 💡 Firebase 免費方案不會因為閒置而暫停，不需要像 Supabase 一樣設定防暫停排程。
+
+> ⚠️ **費用與清理**：Spark（免費）方案不需綁信用卡；改升 Blaze（用多少付多少）才會產生費用。測試用的專案若不再需要，到 Firebase Console → 專案設定 → 刪除專案（約 30 天內可復原）。**只列出專案（`projects:list`）不會建立任何東西。**
 
 ---
 

@@ -60,41 +60,44 @@ gpt-image-2 需要身份驗證才能用。
 
 ## 任務 1：確認環境
 
-檢查使用者環境：
+本懶人包用 `uv` 執行 `draw.py`（不必另外安裝 Python 或用 pip）。檢查：
 
 ```bash
-python --version
-pip --version
+uv --version
 ```
 
-若沒有 Python，提示使用者安裝 Python 3.10+ 後再繼續。
+若沒有 uv，先回到 [#00 環境建置](00-環境建置.md) 安裝。
 
-## 任務 2：安裝必要套件
+> Windows + Claude 桌面版：`uv run` 會把 Python 與暫存放在 `%APPDATA%`（會被 MSIX 導向），一般用途沒問題；若遇到 `uv trampoline` 或 Python 捷徑錯誤，處理方式見 #00。
+
+## 任務 2：確認 openai 套件可用
+
+不要用 `pip install`（macOS/Linux 的系統 Python 還會要求 `--break-system-packages`，不建議）。改用 uv 臨時帶入套件：
 
 ```bash
-pip install openai --break-system-packages
+uv run --with openai python -c "import openai; print(openai.__version__)"
 ```
 
-Windows 使用者跳過 `--break-system-packages`；macOS/Linux 需加上。
+之後執行 `draw.py` 也都用 `uv run --with openai python ...`。
 
-## 任務 3：儲存 API Key
+## 任務 3：儲存 API Key（金鑰不進對話）
 
-用 AskUserQuestion 問使用者：
+> 🔒 **不要請使用者把 API Key 貼進對話。** 金鑰一旦進入對話就可能被記錄。請使用者自己在終端機輸入，Claude 只驗證檔案存在與格式，不讀內容。
 
-> 請把你剛剛從 OpenAI 複製的 API Key（`sk-...` 開頭）貼在下方：
+請使用者在自己的終端機執行（PowerShell）：
 
-拿到 Key 之後，寫入使用者 home 的 `~/.openai.env`（**全域可用**，任何專案都吃得到）：
-
-```
-OPENAI_API_KEY=sk-使用者貼的那串
+```powershell
+$k = Read-Host "貼上 OpenAI API Key（sk- 開頭）"; Set-Content -Path "$env:USERPROFILE\.openai.env" -Value "OPENAI_API_KEY=$k" -Encoding ascii
 ```
 
-Windows 路徑：`C:/Users/<使用者>/.openai.env`
-macOS/Linux：`~/.openai.env`
+macOS / Linux：
+```bash
+read -s -p "貼上 OpenAI API Key: " k; echo; printf 'OPENAI_API_KEY=%s\n' "$k" > ~/.openai.env; chmod 600 ~/.openai.env
+```
 
-**注意**：
-- 這個檔案要有 600 權限（Unix）或加上隱藏屬性（Windows）
-- `.gitignore` 不會追這個路徑（在 home 底下），安全
+Claude 只做格式檢查（存在、以 `OPENAI_API_KEY=sk-` 開頭、無多餘空白），不要印出內容。
+
+檔案位置：Windows `C:/Users/<使用者>/.openai.env`；macOS/Linux `~/.openai.env`（在 home 底下，不會被專案的 git 追蹤）。
 
 ## 任務 4：建立全域 draw Skill
 
@@ -120,7 +123,6 @@ description: OpenAI gpt-image-2 生圖技能（全域可用）。當使用者要
 - 「畫一張 XX」「生一張圖」「做一張圖」
 - 「畫個封面／插圖／示意圖／分鏡」
 - 「產生圖片」「幫我生圖」
-- 「改這張圖」「修改圖片」「把背景換成 XX」（→ 改圖模式，需提供圖片路徑）
 
 ## 腳本位置
 - Windows：`C:/Users/<使用者>/.claude/skills/draw/draw.py`
@@ -128,18 +130,14 @@ description: OpenAI gpt-image-2 生圖技能（全域可用）。當使用者要
 
 ## 使用方式
 ```bash
-python <SKILL路徑>/draw.py "要畫的內容" --name 檔名前綴
+uv run --with openai python <SKILL路徑>/draw.py "要畫的內容" --name 檔名前綴
 ```
 
 ### 參數
 - `prompt`（必填）：要畫什麼
-- `--size`：`1024x1024`（方，預設）/ `1536x1024`（橫）/ `1024x1536`（直）
+- `--size`：`1536x1024`（橫，預設）/ `1024x1024`（方）/ `1024x1536`（直）
 - `--quality`：`low`（預設，NT$0.3）/ `medium`（NT$1.3）/ `high`（NT$5.5）
-- `--n`：生成張數 1–8
 - `--name`：檔名前綴
-- `--outdir`：輸出目錄
-- `--edit IMAGE_PATH`：改圖模式（指定來源圖）
-- `--mask MASK_PATH`：遮罩圖片（搭配 --edit 使用）
 
 ## 判斷 quality 等級的原則
 **預設永遠用 `low`**（省錢 + 速度優先）
@@ -161,146 +159,20 @@ PNG 檔，格式：`<name>_<YYYYMMDD_HHMMSS>.png`
 
 ### 4-2：`draw.py`
 
-```python
-"""
-小克全域生圖腳本（OpenAI gpt-image-2 版）
+直接複製本懶人包附的腳本，不要自己重寫：
 
-用法：
-  python draw.py "一隻穿西裝的龍蝦，寫實風格"
-  python draw.py "演講海報" --size 1536x1024 --name poster
-  python draw.py "把背景換成海底" --edit ./image.png --name edited
-  python draw.py "加一頂帽子" --edit ./image.png --mask ./mask.png --name masked
-
-會自動讀取以下來源的 OPENAI_API_KEY（依序）：
-  1. 當前 shell 環境變數
-  2. 當前工作目錄的 .env
-  3. 使用者 home 的 ~/.openai.env（全域備援）
-
-輸出：
-  預設放在「當前工作目錄/slides/generated/」
-  若該目錄不存在，會建立「./generated/」
-"""
-
-import os
-import sys
-import base64
-import argparse
-from pathlib import Path
-from datetime import datetime
-
-MODEL = "gpt-image-2"
-DEFAULT_SIZE = "1024x1024"
-DEFAULT_QUALITY = "low"
-DEFAULT_N = 1
-
-
-def load_env_from_file(path: Path):
-    if not path.exists():
-        return
-    with open(path, encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, value = line.split("=", 1)
-                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
-
-
-def load_env():
-    load_env_from_file(Path.cwd() / ".env")
-    load_env_from_file(Path.home() / ".openai.env")
-
-
-def resolve_outdir(user_outdir):
-    if user_outdir:
-        return Path(user_outdir)
-    cwd = Path.cwd()
-    slides_dir = cwd / "slides"
-    if slides_dir.exists():
-        return slides_dir / "generated"
-    return cwd / "generated"
-
-
-def _save_results(result, name, n, outdir):
-    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    saved = []
-    for i, item in enumerate(result.data):
-        suffix = f"_{i + 1}" if n > 1 else ""
-        out_path = outdir / f"{name}_{stamp}{suffix}.png"
-        png_bytes = base64.b64decode(item.b64_json)
-        out_path.write_bytes(png_bytes)
-        saved.append(out_path)
-        print(f"  [OK] {out_path}")
-    return saved
-
-
-def draw(prompt, size, quality, n, name, outdir):
-    from openai import OpenAI
-    if not os.getenv("OPENAI_API_KEY"):
-        print("錯誤：找不到 OPENAI_API_KEY", file=sys.stderr)
-        sys.exit(1)
-    outdir.mkdir(parents=True, exist_ok=True)
-    client = OpenAI()
-    print(f"畫圖中（{MODEL}, {size}, {quality}, n={n}） -> {outdir}", file=sys.stderr)
-    result = client.images.generate(model=MODEL, prompt=prompt, size=size,
-                                     quality=quality, n=n)
-    return _save_results(result, name, n, outdir)
-
-
-def edit(prompt, image_path, mask_path, size, quality, n, name, outdir):
-    from openai import OpenAI
-    if not os.getenv("OPENAI_API_KEY"):
-        print("錯誤：找不到 OPENAI_API_KEY", file=sys.stderr)
-        sys.exit(1)
-    if not image_path.exists():
-        print(f"錯誤：找不到來源圖片 {image_path}", file=sys.stderr)
-        sys.exit(1)
-    outdir.mkdir(parents=True, exist_ok=True)
-    client = OpenAI()
-    mode = "遮罩改圖" if mask_path else "全圖改圖"
-    print(f"改圖中（{mode}, {MODEL}, {size}, {quality}） -> {outdir}", file=sys.stderr)
-    kwargs = dict(model=MODEL, image=open(image_path, "rb"),
-                  prompt=prompt, size=size, quality=quality, n=n)
-    if mask_path:
-        if not mask_path.exists():
-            print(f"錯誤：找不到遮罩圖片 {mask_path}", file=sys.stderr)
-            sys.exit(1)
-        kwargs["mask"] = open(mask_path, "rb")
-    result = client.images.edit(**kwargs)
-    return _save_results(result, name, n, outdir)
-
-
-def main():
-    load_env()
-    parser = argparse.ArgumentParser()
-    parser.add_argument("prompt", nargs="+")
-    parser.add_argument("--edit", default=None)
-    parser.add_argument("--mask", default=None)
-    parser.add_argument("--size", default=DEFAULT_SIZE)
-    parser.add_argument("--quality", default=DEFAULT_QUALITY,
-                        choices=["low", "medium", "high", "auto"])
-    parser.add_argument("--n", type=int, default=DEFAULT_N)
-    parser.add_argument("--name", default="image")
-    parser.add_argument("--outdir", default=None)
-    args = parser.parse_args()
-    prompt = " ".join(args.prompt)
-    outdir = resolve_outdir(args.outdir)
-    if args.edit:
-        edit(prompt, Path(args.edit), Path(args.mask) if args.mask else None,
-             args.size, args.quality, args.n, args.name, outdir)
-    else:
-        draw(prompt, args.size, args.quality, args.n, args.name, outdir)
-
-
-if __name__ == "__main__":
-    main()
+```bash
+cp "<懶人包資料夾>/skills/10-draw/draw.py" ~/.claude/skills/draw/draw.py
 ```
+
+> 腳本只支援 `prompt`、`--name`、`--size`、`--quality`（預設 size `1536x1024`、quality `low`），**不支援**一次多張、改圖或遮罩。
 
 ## 任務 5：驗證安裝
 
 測試生成一張圖：
 
 ```bash
-python <SKILL路徑>/draw.py "一隻可愛的黑貓，扁平插畫風格" --name test
+uv run --with openai python <SKILL路徑>/draw.py "一隻可愛的黑貓，扁平插畫風格" --name test
 ```
 
 預期結果：
@@ -332,10 +204,10 @@ python <SKILL路徑>/draw.py "一隻可愛的黑貓，扁平插畫風格" --name
 
 | 方式 | 優點 | 缺點 |
 |------|------|------|
-| **Skill（本篇）** | 零安裝門檻、按需呼叫、不佔資源、整合費用保護邏輯 | 不支援圖片局部修改（需另寫） |
+| **Skill（本篇）** | 零安裝門檻、按需呼叫、不佔資源、整合費用保護邏輯 | 只做文字生圖，不支援改圖與局部修改 |
 | MCP Server | 支援 inpainting、多輪對話 | 要裝 Node.js、改 MCP 設定、常駐 |
 
-對一般使用者來說，**Skill 方式門檻最低**，而且你的 `draw.py` 已經內建 `--edit` 能做全圖改圖。
+對一般使用者來說，**Skill 方式門檻最低**，；本腳本只做「文字生圖」，要改圖或局部修改請另用 MCP 方案。
 
 ## 安全性
 

@@ -143,6 +143,14 @@ nlm --version
 > 如果出現 `nlm: command not found`，請重開終端機再試一次。
 > 如果仍然失敗，請告知使用者可能需要手動將 uv/pip 的路徑加入系統 PATH。
 
+> ⚠️ **Windows + Claude 桌面版：uv 安裝位置要避開 AppData。**
+> 桌面版是 MSIX 封裝，寫入 `%APPDATA%` 會被導向到別處，一般終端機會報 `uv trampoline failed to canonicalize script path`。
+> 請改用（只對這次指令生效）：
+> ```powershell
+> $env:UV_TOOL_DIR="$env:USERPROFILE\.uv-data\tools"; $env:UV_PYTHON_INSTALL_DIR="$env:USERPROFILE\.uv-data\python"; uv tool install --python 3.12 notebooklm-mcp-cli
+> ```
+> 若安裝時出現 `Missing expected target directory for Python minor version link`，是 uv 的 Python 捷徑壞了，處理方式見 [#00 環境建置](00-環境建置.md) 的「uv 的 Python 捷徑損壞」。
+
 ---
 
 ### 步驟二：登入 Google 帳號
@@ -176,6 +184,21 @@ nlm doctor
 ```bash
 nlm setup add claude-code
 ```
+
+> ⚠️ **只裝桌面版、沒有 `claude` CLI 時**，這個指令只會印出設定內容，**不會真的寫入**。請改為手動設定：
+> 1. 先備份 `~/.claude.json`（例如複製成 `.claude.json.bak-日期時間`）。
+> 2. 在檔案**頂層**的 `mcpServers` 加入：
+>    ```json
+>    "gemini-notebook-mcp": {
+>      "command": "<notebooklm-mcp 執行檔的完整路徑，例如 C:\\Users\\<你>\\.local\\bin\\notebooklm-mcp.EXE>"
+>    }
+>    ```
+>    （名稱可自訂；用 JSON 工具修改，避免弄壞其他設定。）
+> 3. 存檔後**重開 Claude 桌面版**，MCP 才會載入。
+>
+> 通則見 [#00 環境建置](00-環境建置.md) 的「MCP 設定的兩種方式」。
+
+> 💡 **剛登入就顯示 `Authentication expired`**：實測曾發生，原因未確認（推測第一次登入的 cookies 沒完整保存）。重新執行 `nlm login`，再呼叫 `refresh_auth` 即可。
 
 #### 給 opencode 使用者
 

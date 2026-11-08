@@ -195,6 +195,10 @@ gh api repos/{owner}/github-test/pages -X POST -f build_type=workflow -f source.
 ```
 
 > 等待約 1 分鐘讓 GitHub Pages 部署完成。
+> ⚠️ **實測補充**：
+> - 使用者的「文件資料夾」若在雲端硬碟或不方便清理的位置，改在暫存資料夾建立 `github-test`，測完整個刪掉。
+> - `gh repo create` 預設需要 `repo` 權限；上面 `--public` 是公開 repo，若只想驗證登入，改成 `--private`。
+> - Pages 的 `gh api` 指令中 `{owner}` 會由 `gh` 自動帶入目前帳號。
 
 6. 取得 GitHub Pages 網址並告知使用者
 7. 請使用者在瀏覽器開啟確認
@@ -211,7 +215,8 @@ gh api repos/{owner}/github-test/pages -X POST -f build_type=workflow -f source.
 
 如果要刪除：
 ```bash
-gh repo delete github-test --yes
+gh auth refresh -s delete_repo   # 第一次刪 repo 前需要補這個權限（會開瀏覽器，請使用者授權）
+gh repo delete <帳號>/github-test --yes
 ```
 
 並刪除本地的 `github-test` 資料夾。

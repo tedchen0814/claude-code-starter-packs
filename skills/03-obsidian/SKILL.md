@@ -14,7 +14,7 @@ description: Claude Code 連接 Obsidian MCPVault。說「連接 Obsidian」時�
 
 > Windows 上 Claude Code 用 `npx` 當 MCP 啟動指令時，常因 PATH 問題找不到；本 repo 實測可行的做法是「全域安裝並鎖定版本，設定檔用完整路徑」。細節見根目錄完整版說明（`03-建立第二大腦-Obsidian.md`）。
 
-1. 先說明這會在電腦上安裝一個全域工具，經使用者同意後安裝並**鎖定版本**：`npm install -g @bitbonsai/mcpvault@0.15.0`（Windows 在 Git Bash 需先把 Node.js 加進 PATH）。要升級時先告知使用者，不要自動用 `@latest`。
+1. 先說明這會在電腦上安裝一個全域工具，經使用者同意後安裝並**鎖定版本**：`npm install -g @bitbonsai/mcpvault@0.15.0`（Windows 在 Git Bash 需先把 Node.js 加進 PATH，並用 `NPM_CONFIG_PREFIX=$USERPROFILE/.npm-global` 避開桌面版 MSIX 對 AppData 的導向）。要升級時先告知使用者，不要自動用 `@latest`。
 2. 用 `where.exe mcpvault`（macOS／Linux 用 `which mcpvault`）確認實際路徑。
 3. 改設定檔之前，先備份 `~/.claude.json` → `~/.claude.json.bak-<日期時間>`。
 4. 加入設定，**預設只裝在目前專案**（不加 `--scope`）：

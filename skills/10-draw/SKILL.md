@@ -14,13 +14,13 @@ description: Claude Code 安裝 gpt-image-2 生圖 skill。說「安裝生圖」
 
 ### 1. 安裝 Python openai 套件
 ```bash
-pip install openai
+uv run --with openai python -c "import openai; print(openai.__version__)"
 ```
 
 ### 2. 儲存 API Key
 ```bash
-# 建立 ~/.openai.env
-echo "OPENAI_API_KEY=sk-proj-你的key" > ~/.openai.env
+# PowerShell：請使用者自己執行，Claude 只驗證檔案存在與格式，不讀內容
+$k = Read-Host "貼上 OpenAI API Key"; Set-Content "$env:USERPROFILE.openai.env" "OPENAI_API_KEY=$k" -Encoding ascii
 ```
 
 ### 3. 安裝 draw skill
@@ -34,7 +34,7 @@ cp "<懶人包資料夾>/skills/10-draw/draw.py" ~/.claude/skills/draw/
 
 ### 4. 測試
 ```bash
-python ~/.claude/skills/draw/draw.py "一隻橘貓坐在窗邊，水彩風格" --name test --quality low
+uv run --with openai python ~/.claude/skills/draw/draw.py "一隻橘貓坐在窗邊，水彩風格" --name test --quality low
 ```
 
 ## 品質與費用
