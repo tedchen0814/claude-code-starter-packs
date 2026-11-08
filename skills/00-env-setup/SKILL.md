@@ -20,7 +20,7 @@ description: Claude Code 環境建置（Git, Node.js, uv）。說「建置環境
 
 - Windows 沒有 winget 時，請使用者從官網下載安裝，不要自己找替代來源。
 - 在 Windows，npm 全域工具（如 `vercel`、`firebase`）若直接打指令失敗，改用 `.cmd` 版（如 `vercel.cmd`）；公司或群組原則常擋未簽章的 `.ps1`。
-- **Windows + Claude 桌面版（MSIX）**：桌面版對 `%APPDATA%` 的寫入會被導向到 `%LOCALAPPDATA%PackagesClaude_…ocalcacheroaming`，一般終端機看不到。全域安裝一律暫時指定非 appdata 位置：`uv_tool_dir=%userprofile%.uv-data	ools`、`uv_python_install_dir=%userprofile%.uv-datapython`、`npm_config_prefix=%userprofile%.npm-global`，並以完整路徑呼叫執行檔。uv 出現 `missing expected target directory for python minor version link` 時，用 `cmd /c rmdir` 刪壞捷徑並加 `--python 3.12` 重裝。詳見 `00-環境建置.md`。
+- **Windows + Claude 桌面版（MSIX）**：桌面版對 `%APPDATA%` 的寫入會被導向到 `%LOCALAPPDATA%\Packages\Claude_…\LocalCache\Roaming`，一般終端機看不到。全域安裝一律暫時指定非 AppData 位置：`UV_TOOL_DIR=%USERPROFILE%\.uv-data\tools`、`UV_PYTHON_INSTALL_DIR=%USERPROFILE%\.uv-data\python`、`NPM_CONFIG_PREFIX=%USERPROFILE%\.npm-global`，並以完整路徑呼叫執行檔。uv 出現 `Missing expected target directory for Python minor version link` 時，用 `cmd /c rmdir` 刪壞捷徑並加 `--python 3.12` 重裝。詳見 `00-環境建置.md`。
 - 要從網路下載並直接執行的安裝腳本（`curl … | sh`），先把網址與用途告訴使用者，經同意再執行。
 
 回報格式：已安裝／已補裝清單＋版本號（用白話）。

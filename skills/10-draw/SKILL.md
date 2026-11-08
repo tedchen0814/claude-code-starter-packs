@@ -20,7 +20,7 @@ uv run --with openai python -c "import openai; print(openai.__version__)"
 ### 2. 儲存 API Key
 ```bash
 # PowerShell：請使用者自己執行，Claude 只驗證檔案存在與格式，不讀內容
-$k = Read-Host "貼上 OpenAI API Key"; Set-Content "$env:USERPROFILE.openai.env" "OPENAI_API_KEY=$k" -Encoding ascii
+$k = Read-Host "貼上 OpenAI API Key"; Set-Content "$env:USERPROFILE\.openai.env" "OPENAI_API_KEY=$k" -Encoding ascii
 ```
 
 ### 3. 安裝 draw skill

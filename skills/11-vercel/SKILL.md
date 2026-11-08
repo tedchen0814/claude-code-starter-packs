@@ -6,7 +6,7 @@ description: Claude Code 串接 Vercel（CLI + MCP + 部署）。說「串接 Ve
 # 串接 Vercel（Claude Code 版）
 
 1. 檢查 `node --version`；缺少就先說明並取得同意後再裝 Node.js LTS。
-2. 安裝 CLI：Windows 桌面版用 `NPM_CONFIG_PREFIX=%USERPROFILE%.npm-global npm i -g vercel@latest`（避開 AppData 被 MSIX 導向），之後用完整路徑 `vercel.cmd --version`；macOS／Linux 直接 `npm i -g vercel@latest`。已安裝就不要重裝。
+2. 安裝 CLI：Windows 桌面版用 `NPM_CONFIG_PREFIX=%USERPROFILE%\.npm-global npm i -g vercel@latest`（避開 AppData 被 MSIX 導向），之後用完整路徑 `vercel.cmd --version`；macOS／Linux 直接 `npm i -g vercel@latest`。已安裝就不要重裝。
 3. 登入：`vercel whoami`，未登入就請使用者自己在終端機執行 `vercel login`（瀏覽器授權）；沒帳號請使用者到 https://vercel.com/signup 選 Hobby，建議用 GitHub 註冊。
 4. **官方 MCP 為選用，預設不加。** CLI 已登入就能列專案、部署、看紀錄，大多數人不需要 MCP；MCP 會增加每個對話的固定開銷，授權範圍也涵蓋帳號下所有專案。只有使用者明確要求，才說明這些影響並取得同意後再加：`claude mcp add --transport http vercel https://mcp.vercel.com`（預設只裝在目前專案；要所有專案共用才加 `--scope user`）→ 完全關閉 Claude Code 再重開 → 輸入 `/mcp` 選 vercel 完成授權。
 5. 測試：先說明會真的上線一個網頁，經同意後才做：在**不屬於任何 git repo** 的空資料夾建 `vercel-test/index.html` → `vercel --yes`（新專案第一次部署會直接算正式，無法先預覽）→ 之後要更新正式網址才 `vercel --prod --yes`→ 請使用者開網址確認。專案第一次部署會直接算正式環境；專案預設開啟 Deployment Protection，驗證內容用 `vercel curl <網址>`。
