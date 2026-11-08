@@ -25,8 +25,8 @@ description: Claude Code 研發建專案工作模式。說「初始化研發工�
 - 這三個技能會常駐在每個對話的技能清單裡（只佔名稱與說明）；安裝前先說明要裝哪三個，等使用者同意。裝完提醒：要**完全關閉 Claude Code 再重開**才會載入。
 
 ## 開工／收工
-- 開工（`startup-sync`）：讀 `CLAUDE.md` → 讀 `工作筆記.md` → `git status`（只檢查，不 pull）→ 回報上次做到哪與下一步。
-- 收工（`shutdown-sync`）：檢查敏感資料 → 更新 `工作筆記.md` → 明確檔案 `git commit` → 有 origin 時 push（push 前先確認）。
+- 開工（`startup-sync`）：讀 `CLAUDE.md`（有的話）→ 讀 `工作筆記.md`（不論有無 Git）→ 是 Git repo 才 `git status`（只檢查，不 pull）→ 回報上次做到哪與下一步。
+- 收工（`shutdown-sync`）：**一律建立或更新 `工作筆記.md`**（不論資料夾位置、有無 Git）→ 是 Git repo 才：檢查敏感資料 → 明確檔案 `git commit` → 有 origin 時 push（push 前先確認）。非 Git 資料夾不自行 `git init`。
 - 有安裝同步工具（chezmoi）才需要同步設定；沒有就略過，不要自行安裝。
 
 回報：已建立的檔案清單、（若有）GitHub repo URL 與 Obsidian 筆記路徑。
